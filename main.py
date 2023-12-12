@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn import preprocessing
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from xgboost import XGBClassifier
 
 # read data
@@ -29,7 +29,10 @@ X_train, X_valid, y_train, y_valid = train_test_split(X, y, train_size=0.8, test
                                                       random_state=0)
 
 model = XGBClassifier(n_estimators=50, learning_rate=0.3, max_depth=2,
-                      n_jobs=6, early_stopping_rounds=5, random_state=0)
+                      n_jobs=6, random_state=0)
+
+scores = cross_val_score(model, X_train, y_train, cv=5)
+print(scores)
 
 model.fit(X_train, y_train,
           eval_set=[(X_valid, y_valid)],
